@@ -1,0 +1,7 @@
+PROGRAM Arefmetic(INPUT, OUTPUT);
+VAR
+  Ch1, Ch2, Ch3, Ch4 : CHAR;
+BEGIN
+  READ(Ch1, Ch2, Ch3, Ch4);
+  WRITELN('Input digits: ', Ch1, ', ', Ch2, ', ', Ch3, ', ', Ch4)
+END.

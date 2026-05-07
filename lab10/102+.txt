@@ -1,0 +1,160 @@
+PROGRAM AutoFormat(INPUT, OUTPUT);
+VAR
+  Ch, State, Busy: CHAR;
+BEGIN
+  READ(INPUT, Ch);
+  State := '1';
+  Busy := '0';
+  WHILE Ch <> '.'
+  DO
+    BEGIN
+      { State - 0(Eiiao oaeea) }
+      { State - 1(Ia?aei oaeea) }
+      { State - 2(Ia?aei ia?aie no?iee) }
+      { State - 3(Ia?aei eino?oeoee) }
+      { State - 4(I?iaie?aiea iacaaiey eino?oeoee) }
+      { State - 5(Iinea eino?oeoee ' ', i?iaa?ea ia ';' eee END) }
+      { State - 6(Ia?aei neiaee) }  
+      Busy := '0';
+      { BEGIN }
+      IF ((State = '1') AND ((Ch = 'B') OR (Ch = 'E') OR (Ch = 'G') OR (Ch = 'I') OR (Ch = 'N')))
+      THEN
+        BEGIN
+          WRITE(Ch);
+          IF (Ch = 'N')
+          THEN
+            BEGIN
+              State := '2';
+              Busy := '1'
+            END
+        END;
+      { Ia?aay no?iea yoi ';' }
+      IF ((State = '2') AND (Ch = ';') AND (Busy = '0'))
+      THEN
+        BEGIN
+          WRITELN;
+          Busy := '1';
+          State := '3';
+          WRITE('  ', Ch)
+        END;
+      { Ia?aay no?iea yoi END. }
+      IF ((State = '2') AND (Ch = 'E') AND (Busy = '0'))
+      THEN
+        BEGIN
+          Busy := '1';
+          State := '0'
+        END;
+      { Caaa?oaiea i?ia?aiiu }
+      IF ((State = '0') AND (Busy = '0'))
+      THEN
+        BEGIN
+          Busy := '1';
+          State := '.';
+          WRITELN;
+          WRITE('END.')
+        END;
+      { END iinea caeii?aiie no?iee }
+      IF ((State = '3') AND (Ch = 'E') AND (Busy = '0'))
+      THEN
+        BEGIN
+          State := '0';
+          Busy := '1'
+        END;
+      { Ionoay eino?oeoey }
+      IF ((State = '3') AND (Ch = ';') AND (Busy = '0'))
+      THEN
+        BEGIN
+          Busy := '1';
+          WRITE(Ch)
+        END;
+      { Ia?aei iiaie eino?oeoee }
+      IF (((State = '3') OR (State = '2')) AND (Ch <> ' ') AND (Busy = '0'))
+      THEN
+        BEGIN
+          Busy := '1';
+          State := '4';
+          WRITELN;
+          WRITE('  ', Ch)
+        END;
+      { Oaei eino?oeoee }
+      IF ((State = '4') AND (Ch <> ';') AND (Ch <> ' ') AND (Ch <> '(') AND (Busy = '0'))
+      THEN
+        BEGIN
+          Busy := '1';
+          WRITE(Ch)
+        END;
+      { ';' a oii? e eino?oeoee }
+      IF ((State = '4') AND (Ch = ';') AND (Busy = '0'))
+      THEN
+        BEGIN
+          Busy := '1';
+          State := '3';
+          WRITE(Ch)
+        END;
+      { ' ' iinea oaea eino?oeoee }
+      IF ((State = '4') AND (Ch = ' ') AND (Busy = '0'))
+      THEN
+        BEGIN
+          Busy := '1';
+          State := '5'
+        END;
+      { '    (' iinea eino?oeoee }
+      IF ((State = '5') AND (Ch = '(') AND (Busy = '0'))
+      THEN
+        BEGIN
+          Busy := '1';
+          State := '6';
+          WRITE(Ch)
+        END;
+      { '    ;' iinea eino?oeoee }
+      IF ((State = '5') AND (Ch = ';') AND (Busy = '0'))
+      THEN
+        BEGIN
+          Busy := '1';
+          State := '3';
+          WRITE(Ch)
+        END;
+      { '   END.' iinea eino?oeoee }
+      IF ((State = '5') AND (Ch = 'E') AND (Busy = '0'))
+      THEN
+        BEGIN
+          Busy := '1';
+          State := '0'
+        END;
+      { Ia?aei neiaee }
+      IF ((State = '4') AND (Ch = '(') AND (Busy = '0'))
+      THEN
+        BEGIN
+          Busy := '1';
+          State := '6';
+          WRITE(Ch)
+        END;
+      { Oaei neiaee }
+      IF ((State = '6') AND (Ch <> ',') AND (Ch <> ')') AND (Ch <> ' ') AND (Busy = '0'))
+      THEN
+        BEGIN
+          Busy := '1';
+          WRITE(Ch)
+        END;
+      { Caiyoay }
+      IF ((State = '6') AND (Ch = ',') AND (Busy = '0'))
+      THEN
+        BEGIN
+          Busy := '1';
+          WRITE(Ch, ' ')
+        END;
+      { Cae?uaaaony neiaea }
+      IF ((State = '6') AND (Ch = ')') AND (Busy = '0'))
+      THEN
+        BEGIN
+          Busy := '1';
+          WRITE(Ch);
+          State := '5'
+        END;
+      {E?ae oneiaee}
+      READ(INPUT, Ch);
+      IF EOLN(INPUT)
+      THEN
+        Ch := '.'
+    END
+END.

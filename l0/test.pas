@@ -1,0 +1,6 @@
+PROGRAM CopyReversy(INPUT,OUTPUT);
+VAR
+  Ch1, Ch2: CHAR;
+BEGIN
+  WRITELN();
+END.

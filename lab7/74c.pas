@@ -1,0 +1,26 @@
+PROGRAM BubbleSortBLM(INPUT, OUTPUT);
+VAR 
+  Ch, Ch1, Ch2: CHAR;
+  F1, F2: TEXT;
+BEGIN 
+  REWRITE F1;
+  WHILE NOT EOF
+  BEGIN
+    READ(INPUT, Ch);
+    IF NOT EOLN
+    THEN
+      WRITE(F1, Ch)
+    ELSE
+      WRITELN(F1)
+  END
+  
+  {Вывод F1}
+  RESET(F1)
+  WHILE NOT EOF
+  BEGIN
+  
+  END
+  
+  
+  WRITELN
+END.
