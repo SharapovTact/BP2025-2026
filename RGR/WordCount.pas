@@ -8,7 +8,7 @@ PROCEDURE InsertWord(Data: STRING; EndOfFile: BOOLEAN);
 
 IMPLEMENTATION
 CONST
-  MaxElementCount = 3;
+  MaxElementCount = 100000;
 VAR
   WordCount: INTEGER;
 

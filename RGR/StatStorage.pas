@@ -2,7 +2,7 @@ UNIT StatStorage;
 
 INTERFACE
 USES
-  WordBinaryTree;
+  WordBinaryTree, WordComp;
   
 PROCEDURE SaveStat(VAR Ptr: WordsBinaryTree; WordCount: INTEGER);
 PROCEDURE PrintStat(VAR FOut: TEXT);
@@ -46,7 +46,77 @@ BEGIN {CopyTree}
 END; {CopyTree}
 
 PROCEDURE MergeStat(VAR TempStat1, TempStat2: WordsBinaryTreeFile);
+VAR
+  WordStat1, WordStat2: WordStatType;
+  HasFirst, HasSecond: BOOLEAN;
+  Comparator: INTEGER;
 BEGIN {MergeStat}
+  HasFirst := FALSE;
+  HasSecond := FALSE;
+  IF NOT EOF(TempStat1)
+  THEN
+    BEGIN
+      HasFirst := TRUE;
+      READ(TempStat1, WordStat1)
+    END;                        
+  IF NOT EOF(TempStat2)
+  THEN
+    BEGIN
+      HasSecond := TRUE;
+      READ(TempStat2, WordStat2)
+    END;
+  WHILE (NOT EOF(TempStat1)) AND (NOT EOF(TempStat2))
+  DO
+    BEGIN
+      Comparator := WordCompare(WordStat1.Key, WordStat2.Key);
+      CASE Comparator OF
+        More:
+          BEGIN
+            WRITE(StatFile, WordStat1);
+            READ(TempStat1, WordStat1)  
+          END;
+        Less:
+          BEGIN
+            WRITE(StatFile, WordStat2);
+            READ(TempStat2, WordStat2)
+          END;
+        Equals:
+          BEGIN
+            WordStat1.Value := WordStat1.Value + WordStat2.Value;
+            WRITE(StatFile, WordStat1);
+            READ(TempStat1, WordStat1);
+            READ(TempStat2, WordStat2) 
+          END
+      END
+    END;
+  IF HasFirst AND HasSecond
+  THEN
+    BEGIN
+      Comparator := WordCompare(WordStat1.Key, WordStat2.Key);
+      CASE Comparator OF
+        More:
+          BEGIN
+            WRITE(StatFile, WordStat1);
+            WRITE(StatFile, WordStat2)
+          END;
+        Less:
+          BEGIN
+            WRITE(StatFile, WordStat2);
+            WRITE(StatFile, WordStat1)
+          END;
+        Equals:
+          BEGIN
+            WordStat1.Value := WordStat1.Value + WordStat2.Value;
+            WRITE(StatFile, WordStat1)
+          END
+      END
+    END
+  ELSE
+    IF HasFirst
+    THEN
+      WRITE(StatFile, WordStat1)
+    ELSE
+      WRITE(StatFile, WordStat2);
   CopyFile(TempStat1, StatFile);
   CopyFile(TempStat2, StatFile)
 END; {MergeStat}
@@ -89,6 +159,6 @@ END; {PrintStat}
 
 BEGIN
   ASSIGN(StatFile, 'WordsStat.DAT');
-  REWRITE(StatFile);
+  REWRITE(StatFile);    
   WordNumber := 0
-END.
+END.                        
