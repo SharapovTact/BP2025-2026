@@ -2,7 +2,7 @@ UNIT WordStat;
 
 INTERFACE
 USES
-  WordParse, WordCount;
+  WordParse, WordCount, StatStorage;
 PROCEDURE PrintWordStat(VAR WordIn, StatOut: TEXT);
 
 IMPLEMENTATION
@@ -20,12 +20,7 @@ BEGIN {PrintWordStat}
       Word := ReadWord(WordIn);
       IF Word <> ''
       THEN
-        IF InsertWord(LowerCase(Word)) = FALSE
-        THEN
-          BEGIN
-            WRITELN(StatOut, '—труктура переполнена, слишком много слов');
-            Overflow := TRUE
-          END
+        InsertWord(LowerCase(Word), EOF(WordIn))
     END;
   REWRITE(StatOut);
   PrintStat(StatOut)

@@ -2,35 +2,31 @@ UNIT WordCount;
 
 INTERFACE
 USES
-  WordBinaryTree;
+  WordBinaryTree, StatStorage;
 
-FUNCTION InsertWord(Data: STRING): BOOLEAN;
-PROCEDURE PrintStat(VAR FOut: TEXT);
+PROCEDURE InsertWord(Data: STRING; EndOfFile: BOOLEAN);
 
 IMPLEMENTATION
 CONST
-  MaxElementCount = 100000;
+  MaxElementCount = 3;
 VAR
   WordCount: INTEGER;
 
-FUNCTION InsertWord(Data: STRING): BOOLEAN; {TRUE - вставилось/FALSE - не вставилось}
+PROCEDURE InsertWord(Data: STRING; EndOfFile: BOOLEAN);
 BEGIN {InsertWord}
-  IF ElementCount < MaxElementCount
+  WordCount := WordCount + 1;
+  Insert(Ptr, Data);
+  IF ElementCount = MaxElementCount
   THEN
     BEGIN
-      WordCount := WordCount + 1;
-      Insert(Ptr, Data);
-      InsertWord := TRUE
-    END
-  ELSE
-    InsertWord := FALSE
+      SaveStat(Ptr, WordCount);
+      WordCount := 0;
+      DeleteTree()
+    END;
+  IF EndOfFile
+  THEN
+    SaveStat(Ptr, WordCount)
 END; {InsertWord}
-
-PROCEDURE PrintStat(VAR FOut: TEXT);
-BEGIN {PrintStat}
-  WRITELN(FOut, ' ол-во слов: ', WordCount);
-  PrintTree(FOut, Ptr)
-END; {PrintStat}
 
 BEGIN
   WordCount := 0

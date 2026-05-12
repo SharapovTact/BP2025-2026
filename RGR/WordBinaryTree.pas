@@ -15,10 +15,16 @@ VAR
   Ptr: WordsBinaryTree; 
   ElementCount: INTEGER;
 
-PROCEDURE Insert(VAR Ptr: WordsBinaryTree; Data: STRING); 
-PROCEDURE PrintTree(VAR FOut: TEXT; VAR Ptr: WordsBinaryTree); 
+PROCEDURE Insert(VAR Ptr: WordsBinaryTree; Data: STRING);
+PROCEDURE DeleteTree();
 
 IMPLEMENTATION 
+
+PROCEDURE DeleteTree();
+BEGIN
+  Ptr := NIL;
+  ElementCount := 0
+END;
 
 PROCEDURE Insert(VAR Ptr: WordsBinaryTree; Data: STRING);
 VAR 
@@ -44,21 +50,6 @@ BEGIN {Insert}
       END
     END
 END; {Insert}
-
-PROCEDURE PrintTree(VAR FOut: TEXT; VAR Ptr: WordsBinaryTree);
-VAR
-  Str: STRING;
-BEGIN {PrintTree}
-  IF Ptr <> NIL
-  THEN
-    BEGIN
-      Str := Ptr^.Key;  
-      PrintTree(FOut, Ptr^.LLink);
-      WRITE(FOut, Str);
-      WRITELN(FOut, ' - ', Ptr^.Value);
-      PrintTree(FOut, Ptr^.RLink)
-    END
-END; {PrintTree}
 
 BEGIN
   ElementCount := 0
