@@ -57,22 +57,26 @@ VAR
 BEGIN {SaveStat}       
   ASSIGN(TempStat1, 'temp1.DAT');
   ASSIGN(TempStat2, 'temp2.DAT');    
-  WordNumber := WordNumber + WordCount; 
+  
   REWRITE(TempStat1);
   REWRITE(TempStat2);
   RESET(StatFile);
+  
   CopyFile(StatFile, TempStat1);
   CopyTree(TempStat2, Ptr);
+  
   RESET(TempStat1);
   RESET(TempStat2);
   REWRITE(StatFile);
-  MergeStat(TempStat1, TempStat2)
+  
+  MergeStat(TempStat1, TempStat2);
+  WordNumber := WordNumber + WordCount
 END; {SaveStat} 
 
 PROCEDURE PrintStat(VAR FOut: TEXT);
 VAR
   WordStat: WordStatType;
-BEGIN
+BEGIN {PrintStat}
   WRITELN(FOut, 'Кол-во слов: ', WordNumber);
   RESET(StatFile);
   WHILE NOT EOF(StatFile)
@@ -81,7 +85,7 @@ BEGIN
       READ(StatFile, WordStat);
       WRITELN(FOut, WordStat.Key, ' - ', WordStat.Value)
     END
-END;
+END; {PrintStat}
 
 BEGIN
   ASSIGN(StatFile, 'WordsStat.DAT');
