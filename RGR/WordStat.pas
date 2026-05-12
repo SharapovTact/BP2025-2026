@@ -28,7 +28,7 @@ BEGIN {PrintWordStat}
           END
     END;
   REWRITE(StatOut);
-  PrintStat(StatOut);
+  PrintStat(StatOut)
 END; {PrintWordStat}
 
 BEGIN
