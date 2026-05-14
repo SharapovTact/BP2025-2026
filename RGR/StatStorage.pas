@@ -118,7 +118,9 @@ BEGIN {MergeStat}
     ELSE
       WRITE(StatFile, WordStat2);
   CopyFile(TempStat1, StatFile);
-  CopyFile(TempStat2, StatFile)
+  CopyFile(TempStat2, StatFile);
+  REWRITE(TempStat1);
+  REWRITE(TempStat2)
 END; {MergeStat}
 
 PROCEDURE SaveStat(VAR Ptr: WordsBinaryTree; WordCount: INTEGER);

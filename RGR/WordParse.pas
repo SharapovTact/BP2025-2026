@@ -98,4 +98,6 @@ BEGIN {ReadWord}
   ReadWord := LowerCase(Word)
 END; {ReadWord}
 
+BEGIN
+
 END.
