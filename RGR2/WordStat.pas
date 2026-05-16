@@ -2,7 +2,7 @@ UNIT WordStat;
 
 INTERFACE
 USES
-  WordStorage;
+  WordStorage, WordParse;
 PROCEDURE PrintWordStat(VAR WordIn, StatOut: TEXT);
 
 IMPLEMENTATION
@@ -10,17 +10,15 @@ IMPLEMENTATION
 PROCEDURE PrintWordStat(VAR WordIn, StatOut: TEXT);
 VAR
   Word: STRING;
-  Overflow: BOOLEAN;
 BEGIN {PrintWordStat}
   RESET(WordIn);
-  Overflow := FALSE;
-  WHILE NOT EOF(WordIn) AND NOT Overflow
+  WHILE NOT EOF(WordIn)
   DO
     BEGIN
       Word := ReadWord(WordIn);
       IF Word <> ''
       THEN
-        Insert(Word)
+        Insert(LowerCase(Word))
     END;
   PrintStat(StatOut)
 END; {PrintWordStat}
