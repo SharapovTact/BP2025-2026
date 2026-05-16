@@ -9,7 +9,7 @@ PROCEDURE PutStructToStorage(FInPtr, FOutPtr: POINTER);
 IMPLEMENTATION
 
 USES
-  WordCompare;
+  WordCompare, StatRW;
 TYPE 
   WordsBinaryTree = ^NodeType;
   
@@ -18,10 +18,6 @@ TYPE
                Value: INTEGER;
                LLink, RLink: WordsBinaryTree
              END; 
-  WordStatType = RECORD
-                   Key: STRING;
-                   Value: INTEGER
-                 END;  
 VAR
   Ptr: WordsBinaryTree; 
   ElementCount: INTEGER;
@@ -35,7 +31,7 @@ END;
 PROCEDURE Insert(VAR Ptr: WordsBinaryTree; Word: STRING);
 VAR 
   Comparator: INTEGER;
-BEGIN
+BEGIN {Insert}
   IF Ptr = NIL
   THEN
     BEGIN 
@@ -55,25 +51,13 @@ BEGIN
         Less: Insert(Ptr^.RLink, Word)
       END
     END
-END;
+END; {Insert}
 
 FUNCTION InsertInStruct(Word: STRING): INTEGER;
 BEGIN {InsertInStruct}
   Insert(Ptr, Word);
   InsertInStruct := ElementCount
 END; {InsertInStruct}
-
-PROCEDURE ReadStorageFile(VAR FIn: TEXT; VAR WordStat: WordStatType);
-BEGIN
-  READLN(FIn, WordStat.Key);
-  READLN(FIn, WordStat.Value);
-END;
-
-PROCEDURE WriteInStorage(VAR FOut: TEXT; VAR WordStat: WordStatType);
-BEGIN
-  WRITELN(FOut, WordStat.Key);
-  WRITELN(FOut, WordStat.Value);
-END;
 
 PROCEDURE MergeTree(VAR FIn, FOut: TEXT; VAR Ptr: WordsBinaryTree; VAR StorageWordStat: WordStatType);
 VAR
@@ -100,7 +84,7 @@ BEGIN {MergeTree}
                 WriteInStorage(FOut, StorageWordStat);
                 IF NOT EOF(FIn)
                 THEN
-                  ReadStorageFile(FIn, StorageWordStat) {вынести в отд. модуль}
+                  ReadStorageFile(FIn, StorageWordStat)
                 ELSE
                   StorageWordStat.Key := '';
                 NextNode := TRUE
@@ -109,7 +93,7 @@ BEGIN {MergeTree}
               BEGIN
                 WordStat.Key := Ptr^.Key;
                 WordStat.Value := Ptr^.Value;
-                WriteInStorage(FOut, WordStat); {Вынести в отд. файл}
+                WriteInStorage(FOut, WordStat);
                 NextNode := TRUE
               END;
             Less: 
@@ -117,35 +101,34 @@ BEGIN {MergeTree}
                 WriteInStorage(FOut, StorageWordStat);
                 IF NOT EOF(FIn)
                 THEN
-                  ReadStorageFile(FIn, StorageWordStat) {вынести в отд. модуль}
+                  ReadStorageFile(FIn, StorageWordStat)
                 ELSE
                   StorageWordStat.Key := ''
               END
           END
           
         END;
-      MergeTree(FIn, FOut, Ptr^.RLink, StorageWordStat);
+      MergeTree(FIn, FOut, Ptr^.RLink, StorageWordStat)
     END
 END; {MergeTree}
 
 PROCEDURE WriteTree(VAR FOut: TEXT; Ptr: WordsBinaryTree);
 VAR
   WordStat: WordStatType;
-BEGIN
+BEGIN {WriteTree}
   IF Ptr <> NIL 
   THEN
     BEGIN
       WriteTree(FOut, Ptr^.LLink);
-      WRITELN('запись в бинарное дерево'); {Отладочный оператор}
       WordStat.Key := Ptr^.Key;
       WordStat.Value := Ptr^.Value;
       WriteInStorage(FOut, WordStat);
       WriteTree(FOut, Ptr^.RLink)
     END
-END;
+END; {WriteTree}
 
 PROCEDURE PutStructToStorage(FInPtr, FOutPtr: POINTER);
-VAR
+VAR {PutStructToStorage}
   StorageWordStat: WordStatType;
   FIn, FOut: ^TEXT;
 BEGIN
@@ -159,7 +142,7 @@ BEGIN
     WriteTree(FOut^, Ptr)
   ELSE
     BEGIN
-      ReadStorageFile(FIn^, StorageWordStat); {вынести в отд. модуль}
+      ReadStorageFile(FIn^, StorageWordStat);
       MergeTree(FIn^, FOut^, Ptr, StorageWordStat);
       IF StorageWordStat.Key <> ''
       THEN
@@ -171,7 +154,7 @@ BEGIN
           WriteInStorage(FOut^, StorageWordStat)
         END
     END
-END;
+END; {PutStructToStorage}
 
 
 BEGIN

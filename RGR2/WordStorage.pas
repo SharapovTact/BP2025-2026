@@ -8,27 +8,22 @@ PROCEDURE PrintStat(VAR FOut: TEXT);
 IMPLEMENTATION
 
 USES
-  WordSortStruct;
+  WordSortStruct, StatRW;
 CONST
   MaxElementNumber = 3;
-TYPE
-  WordStatType = RECORD
-                   Key: STRING;
-                   Value: INTEGER
-                 END;
 VAR
   WordCounter: INTEGER;
   StatFile1, StatFile2: TEXT;
   StorageFile, EmptyFile, Temp: ^TEXT;
 
 PROCEDURE AddFreshDataInStorage();
-BEGIN
+BEGIN {AddFreshDataInStorage}
   PutStructToStorage(StorageFile, EmptyFile);
   DeleteStruct();
   Temp := StorageFile;
   StorageFile := EmptyFile;
   EmptyFile := Temp
-END;
+END; {AddFreshDataInStorage}
   
 PROCEDURE Insert(Word: STRING);
 BEGIN {Insert}
@@ -37,12 +32,6 @@ BEGIN {Insert}
   THEN
     AddFreshDataInStorage()
 END; {Insert}
-
-PROCEDURE ReadStorageFile(VAR FIn: TEXT; VAR WordStat: WordStatType);
-BEGIN
-  READLN(FIn, WordStat.Key);
-  READLN(FIn, WordStat.Value);
-END;
 
 PROCEDURE PrintStat(VAR FOut: TEXT);
 VAR
